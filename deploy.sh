@@ -23,12 +23,12 @@ case "$1" in
 
       # Pulls (downloads) the the custom mysql container from the Docker Registry
       mysql)
-        docker pull mozilla/location_mysql:latest;
+        docker pull bern/ichnaea-db:latest;
       ;;
 
       # Pulls (downloads) the the redis container from the Docker Registry
       redis)
-        docker pull mozilla/location_redis:latest;
+        docker pull redis:latest;
       ;;
 
     esac
@@ -86,7 +86,7 @@ case "$1" in
         fi
         docker run -d -p 3306:3306/tcp --name="location_mysql" \
           -e "MYSQL_ROOT_PASSWORD=location" -e "MYSQL_DATABASE=location" \
-          -e "MYSQL_USER=location" -e "MYSQL_PASSWORD=location" mysql
+          -e "MYSQL_USER=location" -e "MYSQL_PASSWORD=location" bern/ichnaea-db
         REDIS_ID="$(docker ps -a -q --filter name=location_redis)"
         if [ ! -z "$REDIS_ID" ]; then
           $0 stop services
@@ -221,7 +221,7 @@ case "$1" in
   # Updates CSS resources using a special node container.
   css)
     docker run -it --rm \
-        --volume `pwd`:/app mozilla/location_node \
+        --volume `pwd`:/app bern/location_node \
         make -f node.make css
     ;;
 
@@ -233,7 +233,7 @@ case "$1" in
   # Updates JS resources using a special node container.
   js)
     docker run -it --rm \
-        --volume `pwd`:/app mozilla/location_node \
+        --volume `pwd`:/app bern/location_node \
         make -f node.make js
     ;;
 
